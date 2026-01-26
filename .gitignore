@@ -3,3 +3,10 @@
 
 # cache do python
 __pycache__/
+
+# alembic
+/alembic
+alembic.ini
+
+# databse
+/database
