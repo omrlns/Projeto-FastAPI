@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from models.models import Usuario
 from dependencies.sessao import sessao
+from main import bcrypt_context
 
 autenticacao_router = APIRouter(prefix="/autenticacao", tags=["autenticação"])
 
@@ -14,7 +15,8 @@ async def criar_conta(nome: str, email: str, senha: str, session = Depends(sessa
     if usuario:
         return {"mensagem": "já existe um usuário com esse email."}
     else:
-        novo_usuario = Usuario(nome, email, senha)
+        senha_criptografada = bcrypt_context.hash(senha)
+        novo_usuario = Usuario(nome, email, senha_criptografada)
         session.add(novo_usuario)
         session.commit()
         return {"mensagem": "usuário cadastrado com sucesso."}

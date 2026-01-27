@@ -10,3 +10,6 @@ alembic.ini
 
 # databse
 /database
+
+# variáveis de ambiente
+.env
