@@ -7,8 +7,15 @@ from sqlalchemy.orm import Session
 
 def criar_token(id_usuario):
     token = "aeioubcdfgh{}".format(id_usuario)
-    return token 
+    return token
 
+def autenticar_usuario(email, senha, session):
+    usuario = session.query(Usuario).filter(Usuario.email==email).first()
+    if not usuario:
+        return False
+    elif not bcrypt_context.verify(senha, usuario.senha):
+        return False
+    return usuario
 
 autenticacao_router = APIRouter(prefix="/autenticacao", tags=["autenticação"])
 
@@ -36,9 +43,9 @@ async def criar_conta(usuario_schema: UsuarioSchema, session: Session = Depends(
 
 @autenticacao_router.post("/login")
 async def login(login_schema: LoginSchema, session: Session = Depends(sessao)):
-    usuario = session.query(Usuario).filter(Usuario.email==login_schema.email).first()
+    usuario = autenticar_usuario(login_schema.email, login_schema.senha, session)
     if not usuario:
-        raise HTTPException(status_code=400, detail="usuário não encontrado.")
+        raise HTTPException(status_code=400, detail="usuário não encontrado ou credencias inválidas!")
     else:
         acessar_token = criar_token(usuario.id)
         return {"acessar_token": acessar_token,
