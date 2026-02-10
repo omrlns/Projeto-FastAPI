@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from dependencies.sessao import sessao
+from dependencies.dependencies import sessao
 from schemas import PedidoSchema
 from models.models import Pedido
 

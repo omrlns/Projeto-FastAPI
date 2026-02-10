@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from models.models import Usuario
-from dependencies.sessao import sessao
+from dependencies.dependencies import sessao, verificar_token
 from main import bcrypt_context, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY
 from schemas import UsuarioSchema, LoginSchema
 from sqlalchemy.orm import Session
@@ -15,11 +15,6 @@ def criar_token(id_usuario, duracao_token=timedelta(minutes=ACCESS_TOKEN_EXPIRE_
     informacoes = {"sub": id_usuario, "exp": int(data_expiracao.timestamp())}
     jwt_codificado = jwt.encode(informacoes, SECRET_KEY, ALGORITHM)
     return jwt_codificado
-
-def verificar_token(token, session: Session = Depends(sessao)):
-    # verificar se o token é válido e extrair o id do usuário do token
-    usuario = session.query(Usuario).filter(Usuario.id==1).first()
-    return usuario
 
 def autenticar_usuario(email, senha, session):
     usuario = session.query(Usuario).filter(Usuario.email==email).first()
