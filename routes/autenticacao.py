@@ -16,6 +16,11 @@ def criar_token(id_usuario, duracao_token=timedelta(minutes=ACCESS_TOKEN_EXPIRE_
     jwt_codificado = jwt.encode(informacoes, SECRET_KEY, ALGORITHM)
     return jwt_codificado
 
+def verificar_token(token, session: Session = Depends(sessao)):
+    # verificar se o token é válido e extrair o id do usuário do token
+    usuario = session.query(Usuario).filter(Usuario.id==1).first()
+    return usuario
+
 def autenticar_usuario(email, senha, session):
     usuario = session.query(Usuario).filter(Usuario.email==email).first()
     if not usuario:
@@ -56,6 +61,15 @@ async def login(login_schema: LoginSchema, session: Session = Depends(sessao)):
     else:
         access_token = criar_token(usuario.id)
         refresh_token = criar_token(usuario.id, duracao_token=timedelta(days=7))
-        return {"acessar_token": access_token,
+        return {"access_token": access_token,
                 "refresh_token": refresh_token,
                 "tipo_token": "Bearer"}
+    
+@autenticacao_router.get("/refresh")
+async def use_refresh_token(token):
+    usuario = verificar_token(token)
+    access_token = criar_token(usuario.id)
+    return {
+        "access_token": access_token,
+        "tipo_token": "Bearer"
+        }
