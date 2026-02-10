@@ -13,3 +13,6 @@ alembic.ini
 
 # variáveis de ambiente
 .env
+
+# ambiente de teste
+testes.py
