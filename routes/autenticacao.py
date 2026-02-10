@@ -8,8 +8,8 @@ from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 
 
-def criar_token(id_usuario):
-    data_expiracao = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+def criar_token(id_usuario, duracao_token=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
+    data_expiracao = datetime.now(timezone.utc) + duracao_token
     # sub, nome padrão para se referenciar ao dono do token
     # exp, para se referir a validade do token
     informacoes = {"sub": id_usuario, "exp": int(data_expiracao.timestamp())}
@@ -54,6 +54,8 @@ async def login(login_schema: LoginSchema, session: Session = Depends(sessao)):
     if not usuario:
         raise HTTPException(status_code=400, detail="usuário não encontrado ou credencias inválidas!")
     else:
-        acessar_token = criar_token(usuario.id)
-        return {"acessar_token": acessar_token,
+        access_token = criar_token(usuario.id)
+        refresh_token = criar_token(usuario.id, duracao_token=timedelta(days=7))
+        return {"acessar_token": access_token,
+                "refresh_token": refresh_token,
                 "tipo_token": "Bearer"}
