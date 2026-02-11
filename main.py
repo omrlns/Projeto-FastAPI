@@ -14,7 +14,7 @@ app = FastAPI()
 # para rodar a api, deve-se executar no terminal: uvicorn main:app --reload
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_schema = OAuth2PasswordBearer(tokenUrl="autenticacao/login")
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="autenticacao/login-form")
 
 from routes.autenticacao import autenticacao_router
 from routes.pedidos import pedidos_router
