@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from dependencies.dependencies import sessao
+from dependencies.dependencies import sessao, verificar_token
 from schemas import PedidoSchema
 from models.models import Pedido
 
-pedidos_router = APIRouter(prefix="/pedidos", tags=["pedidos"])
+pedidos_router = APIRouter(prefix="/pedidos", tags=["pedidos"], dependencies=[Depends(verificar_token)])
 
 @pedidos_router.get("/")
 async def pedidos():
