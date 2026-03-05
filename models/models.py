@@ -43,6 +43,12 @@ class Pedido(Base):
         self.preco = preco
         self.status = status
 
+    def calcular_preco(self):
+        # percorrer todos os itens do pedido
+        # somar todos os preços de todos os itens dos pedidos
+        # editar no campo "preço" o valor final do preço do pedido
+        self.preco = 10 # valor padrão por ora, apenas para testar a funcionalidade junto com a rota de adicionar item ao pedido
+
 # ItensPedido
 class ItemPedido(Base):
     __tablename__ = "itens_pedido"
