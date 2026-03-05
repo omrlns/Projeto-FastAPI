@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy_utils.types import ChoiceType
 
 # conexão do branco de dados
@@ -36,7 +36,8 @@ class Pedido(Base):
     status = Column("status", String) # PENDENTE, CANCELADO, FINALIZADO
     usuario = Column("usuario", ForeignKey("usuarios.id"))
     preco = Column("preco", Float)
-    # itens
+    # cascade="all, delete" serve para apagar todas as relações de um pedido e o seus itens quando um pedido for deletado
+    itens = relationship("ItemPedido", cascade="all, delete")
 
     def __init__(self, usuario, status="PENDENTE", preco=0):
         self.usuario = usuario
@@ -47,7 +48,8 @@ class Pedido(Base):
         # percorrer todos os itens do pedido
         # somar todos os preços de todos os itens dos pedidos
         # editar no campo "preço" o valor final do preço do pedido
-        self.preco = 10 # valor padrão por ora, apenas para testar a funcionalidade junto com a rota de adicionar item ao pedido
+        self.preco = sum(item.preco_unitario * item.quantidade for item in self.itens)
+
 
 # ItensPedido
 class ItemPedido(Base):
@@ -65,7 +67,5 @@ class ItemPedido(Base):
         self.tamanho = tamanho
         self.preco_unitario = preco_unitario
         self.pedido = pedido
-
-
 
 # execução e criação dos metadados do seu banco (cria efetivamente o banco de dados)
