@@ -69,3 +69,7 @@ class ItemPedido(Base):
         self.pedido = pedido
 
 # execução e criação dos metadados do seu banco (cria efetivamente o banco de dados)
+
+# migrar o banco de dados:
+    # criar a migração: alembic revision --autogenerate -m "mensagem"
+    # executar a migração: alembic upgrade head
