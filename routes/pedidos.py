@@ -83,3 +83,7 @@ async def remover_item_pedido(id_item_pedido: int,
         "quantidade_itens_pedido": len(pedido.itens),
         "pedido": pedido
         }
+
+# finalizar pedido
+# visualizar pedido
+# visualizar todos os pedidos de um determinado usuário
