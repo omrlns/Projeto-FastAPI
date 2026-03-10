@@ -110,4 +110,9 @@ async def visualizar_pedido(id_pedido: int, session: Session = Depends(sessao), 
             "pedido": pedido
             }
 
-# visualizar todos os pedidos de um determinado usuário
+@pedidos_router.get("/listar/pedidos-usuario")
+async def listar_pedidos(session: Session = Depends(sessao), usuario: Usuario = Depends(verificar_token)):
+    pedidos = session.query(Pedido).filter(Pedido.usuario==usuario.id).all()
+    return {
+        "pedidos": pedidos
+    }
