@@ -84,6 +84,19 @@ async def remover_item_pedido(id_item_pedido: int,
         "pedido": pedido
         }
 
-# finalizar pedido
+@pedidos_router.post("/pedido/finalizar/{id_pedido}")
+async def finalizar_pedido(id_pedido: int, session: Session = Depends(sessao), usuario: Usuario = Depends(verificar_token)):
+    pedido = session.query(Pedido).filter(Pedido.id==id_pedido).first()
+    if not pedido: 
+        raise HTTPException(status_code=400, detail="Pedido não encontrado!")
+    if not usuario.perfilAdmin and usuario.id != pedido.usuario:
+        raise HTTPException(status_code=401, detail="Você não tem autorização para fazer essa modificação!")
+    pedido.status = "FINALIZADO"
+    session.commit()
+    return {
+        "mensagem": "Pedido #{} finalizado com sucesso!".format(pedido.id),
+        "pedido": pedido
+            }
+
 # visualizar pedido
 # visualizar todos os pedidos de um determinado usuário
