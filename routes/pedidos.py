@@ -7,10 +7,6 @@ from typing import List
 
 pedidos_router = APIRouter(prefix="/pedidos", tags=["pedidos"], dependencies=[Depends(verificar_token)])
 
-@pedidos_router.get("/")
-async def pedidos():
-    return {"mensagem": "se você está vendo isso, funcionou!"}
-
 @pedidos_router.post("/pedido")
 async def criar_pedido(pedido_schema: PedidoSchema, session: Session = Depends(sessao)):
     novo_pedido = Pedido(usuario=pedido_schema.usuario)

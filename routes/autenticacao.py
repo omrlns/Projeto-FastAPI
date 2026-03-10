@@ -27,10 +27,6 @@ def autenticar_usuario(email, senha, session):
 
 autenticacao_router = APIRouter(prefix="/autenticacao", tags=["autenticação"])
 
-@autenticacao_router.get("/")
-async def home():
-    return {"mensagem": "se você está vendo isso, funcionou!", "autenticado": False}
-
 @autenticacao_router.post("/criar_conta")
 async def criar_conta(usuario_schema: UsuarioSchema, session: Session = Depends(sessao)):
     usuario = session.query(Usuario).filter(Usuario.email==usuario_schema.email).first()
